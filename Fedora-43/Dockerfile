@@ -30,6 +30,8 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
         acpica-tools \
         dotnet-runtime-${DOTNET_VERSION} \
         clang20-20.1.8-2.fc43 \
+        llvm20-20.1.8-2.fc43 \
+        compiler-rt20 \
         curl \
         gcc-c++ \
         gcc \
@@ -44,9 +46,7 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
         libuuid-devel \
         libasan \
         libubsan \
-        compiler-rt \
         lld \
-        llvm20-20.1.8-2.fc43 \
         make \
         nuget \
         nasm \
