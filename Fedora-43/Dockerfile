@@ -91,6 +91,9 @@ ENV GCC5_ARM_PREFIX=/usr/bin/arm-linux-gnu-
 ENV GCC5_RISCV64_PREFIX=/usr/bin/riscv64-linux-gnu-
 ENV GCC5_LOONGARCH64_PREFIX=/usr/bin/loongarch64-linux-gnu-
 
+# Add clang-20 and llvm-20 to PATH
+ENV PATH=/usr/lib64/llvm20/bin:$PATH
+
 # Tools used by build extensions.
 RUN --mount=type=cache,target=/root/.npm \
     npm install -g npm \
