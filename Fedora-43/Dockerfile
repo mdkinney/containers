@@ -29,14 +29,6 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
       install \
         acpica-tools \
         dotnet-runtime-${DOTNET_VERSION} \
-        # clang/llvm 20.1.8
-        clang20-20.1.8-2.fc43 \
-        llvm20-20.1.8-2.fc43 \
-        # clang runtime libraries
-        compiler-rt20 \
-        # 32-bit x86 libraries
-        glibc.i686 glibc-devel.i686 libstdc++.i686 \
-        libX11.i686 libX11-devel.i686 libXext.i686 libXext-devel.i686 \
         curl \
         gcc-c++ \
         gcc \
@@ -64,6 +56,33 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
         npm \
         tar \
         sudo
+
+# Install clang/llvm 20.1.8 and clang compiler-rt
+RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
+    dnf \
+      --assumeyes \
+      --nodocs \
+      --setopt=install_weak_deps=0 \
+      install \
+        clang20-20.1.8-2.fc43 \
+        llvm20-20.1.8-2.fc43 \
+        compiler-rt20
+
+# Install 32-bit x86 libraries
+RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
+    dnf \
+      --assumeyes \
+      --nodocs \
+      --setopt=install_weak_deps=0 \
+      install \
+        glibc.i686 \
+        glibc-devel.i686 \
+        libstdc++.i686 \
+        libX11.i686 \
+        libX11-devel.i686 \
+        libXext.i686 \
+        libXext-devel.i686
+
 RUN alternatives --install /usr/bin/python python /usr/bin/python3 1
 
 # Preinstall python + dependencies as virtual environment
