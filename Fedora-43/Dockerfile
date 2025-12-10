@@ -29,9 +29,14 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
       install \
         acpica-tools \
         dotnet-runtime-${DOTNET_VERSION} \
+        # clang/llvm 20.1.8
         clang20-20.1.8-2.fc43 \
         llvm20-20.1.8-2.fc43 \
+        # clang runtime libraries
         compiler-rt20 \
+        # 32-bit x86 libraries
+        glibc.i686 glibc-devel.i686 libstdc++.i686 \
+        libX11.i686 libX11-devel.i686 libXext.i686 libXext-devel.i686 \
         curl \
         gcc-c++ \
         gcc \
