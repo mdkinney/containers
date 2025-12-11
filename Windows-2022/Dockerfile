@@ -18,10 +18,10 @@ SHELL ["cmd", "/S", "/C"]
 
 # Install VS2022 Build Tools
 RUN curl -SL --output vs_buildtools.exe https://aka.ms/vs/17/release/vs_buildtools.exe
-RUN vs_buildtools.exe --quiet --wait --norestart --nocache --installPath C:\BuildTools ^
-  --add Microsoft.VisualStudio.Component.VC.CoreBuildTools ^
-  --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 ^
-  --add Microsoft.VisualStudio.Component.Windows11SDK.22621 ^
+RUN vs_buildtools.exe --quiet --wait --norestart --nocache --installPath C:\BuildTools \
+  --add Microsoft.VisualStudio.Component.VC.CoreBuildTools \
+  --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 \
+  --add Microsoft.VisualStudio.Component.Windows11SDK.22621 \
   --add Microsoft.VisualStudio.Component.VC.Tools.ARM64
 RUN if exist vs_buildtools.exe del /q vs_buildtools.exe
 
