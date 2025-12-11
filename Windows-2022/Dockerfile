@@ -54,18 +54,10 @@ RUN npm install -g markdownlint-cli
 # Install CSpell
 RUN npm install -g cspell
 
-# Install chocolatey
-RUN curl -SL --output chocolatey_install.ps1 https://community.chocolatey.org/install.ps1
-RUN powershell -ExecutionPolicy Bypass -Command "& './chocolatey_install.ps1'"
-RUN del /q chocolatey_install.ps1
-ENV PATH="C:\ProgramData\chocolatey\bin;${PATH}"
-
-# Install CLANG/LLVM 20.1.8 from chocolatey
-ARG CLANG_VERSION=20.1.8
-RUN choco install -y llvm --version=%CLANG_VERSION%
-
-# Install curl
-RUN choco install -y curl
+# Install LLVM 20.1.8
+RUN curl -SL --output llvm_install.exe https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/LLVM-20.1.8-win64.exe
+RUN llvm_install.exe /S
+RUN del /q llvm_install.exe
 
 # Install TianoCore Mingw CLANG 20.1.8
 RUN curl -L -o EdkClangSetup-20.1.8.0.exe https://github.com/tianocore/edk2-edkrepo/releases/download/edkclang-v20.1.8/EdkClangSetup-20.1.8.0.exe
