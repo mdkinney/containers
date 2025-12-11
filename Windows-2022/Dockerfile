@@ -18,7 +18,7 @@ SHELL ["cmd", "/S", "/C"]
 
 # Install VS2022 Build Tools
 RUN curl -SL --output vs_buildtools.exe https://aka.ms/vs/17/release/vs_buildtools.exe
-RUN vs_buildtools.exe --quiet --wait --norestart --nocache --installPath C:\BuildTools \
+RUN vs_buildtools.exe --quiet --wait --norestart --nocache \
   --add Microsoft.VisualStudio.Component.VC.CoreBuildTools \
   --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 \
   --add Microsoft.VisualStudio.Component.Windows11SDK.22621 \
@@ -34,6 +34,9 @@ ENV PATH="C:\ProgramData\chocolatey\bin;${PATH}"
 # Install CLANG/LLVM 20.1.8 from chocolatey
 ARG CLANG_VERSION=20.1.8
 RUN choco install -y llvm --version=%CLANG_VERSION%
+
+# Install curl
+RUN choco install -y curl
 
 # Install LLVM-MinGW 20.1.8
 RUN curl -L -o "llvm-mingw.zip" "https://github.com/mstorsjo/llvm-mingw/releases/download/20251104/llvm-mingw-20251104-ucrt-x86_64.zip"
