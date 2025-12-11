@@ -16,6 +16,11 @@ ARG GIT_LINK=https://github.com/git-for-windows/git/releases/download/v2.52.0.wi
 # Setup CMD as default shell.
 SHELL ["cmd", "/S", "/C"]
 
+# Install LLVM-MinGW 20.1.8
+RUN curl -L -o "llvm-mingw.zip" "https://github.com/mstorsjo/llvm-mingw/releases/download/20251104/llvm-mingw-20251104-ucrt-x86_64.zip"
+RUN powershell -ExecutionPolicy Bypass -Command "Expand-Archive -Path 'llvm-mingw.zip' -DestinationPath 'C:\' -Force"
+RUN del /q llvm-mingw.zip
+
 # Install VS2022 Build Tools
 RUN curl -SL --output vs_buildtools.exe https://aka.ms/vs/17/release/vs_buildtools.exe
 RUN vs_buildtools.exe --quiet --wait --norestart --nocache \
@@ -38,24 +43,10 @@ RUN choco install -y llvm --version=%CLANG_VERSION%
 # Install curl
 RUN choco install -y curl
 
-# Start new shell to refresh environment variables
-RUN cmd /c "echo Environment refreshed"
-
-# Install LLVM-MinGW 20.1.8
-RUN curl -L -o "llvm-mingw.zip" "https://github.com/mstorsjo/llvm-mingw/releases/download/20251104/llvm-mingw-20251104-ucrt-x86_64.zip"
-RUN powershell -ExecutionPolicy Bypass -Command "Expand-Archive -Path 'llvm-mingw.zip' -DestinationPath 'C:\' -Force"
-RUN del /q llvm-mingw.zip
-
-# Start new shell to refresh environment variables
-RUN cmd /c "echo Environment refreshed"
-
 # Install TianoCore Mingw CLANG 20.1.8
 RUN curl -L -o EdkClangSetup-20.1.8.0.exe https://github.com/tianocore/edk2-edkrepo/releases/download/edkclang-v20.1.8/EdkClangSetup-20.1.8.0.exe
 RUN EdkClangSetup-20.1.8.0.exe /silent
 RUN del /q EdkClangSetup-20.1.8.0.exe
-
-# Start new shell to refresh environment variables
-RUN cmd /c "echo Environment refreshed"
 
 # Install Python3
 RUN curl -SL --output python_install.exe %PYTHON_LINK%
