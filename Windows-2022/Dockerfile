@@ -43,11 +43,6 @@ RUN choco install -y llvm --version=%CLANG_VERSION%
 # Install curl
 RUN choco install -y curl
 
-# Install TianoCore Mingw CLANG 20.1.8
-RUN curl -L -o EdkClangSetup-20.1.8.0.exe https://github.com/tianocore/edk2-edkrepo/releases/download/edkclang-v20.1.8/EdkClangSetup-20.1.8.0.exe
-RUN EdkClangSetup-20.1.8.0.exe /silent
-RUN del /q EdkClangSetup-20.1.8.0.exe
-
 # Install Python3
 RUN curl -SL --output python_install.exe %PYTHON_LINK%
 RUN python_install.exe /quiet InstallAllUsers=1 PrependPath=1 Include_test=0
@@ -71,3 +66,8 @@ RUN npm install -g markdownlint-cli
 
 # Install CSpell
 RUN npm install -g cspell
+
+# Install TianoCore Mingw CLANG 20.1.8
+RUN curl -L -o EdkClangSetup-20.1.8.0.exe https://github.com/tianocore/edk2-edkrepo/releases/download/edkclang-v20.1.8/EdkClangSetup-20.1.8.0.exe
+RUN EdkClangSetup-20.1.8.0.exe /silent
+RUN del /q EdkClangSetup-20.1.8.0.exe
