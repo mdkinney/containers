@@ -40,7 +40,7 @@ RUN choco install -y curl
 
 # Install LLVM-MinGW 20.1.8
 RUN curl -L -o "llvm-mingw.zip" "https://github.com/mstorsjo/llvm-mingw/releases/download/20251104/llvm-mingw-20251104-ucrt-x86_64.zip"
-RUN powershell -command "Expand-Archive -Path 'llvm-mingw.zip' -DestinationPath 'C:\' -Force"
+RUN powershell -ExecutionPolicy Bypass -Command "Expand-Archive -Path 'llvm-mingw.zip' -DestinationPath 'C:\' -Force"
 RUN del /q llvm-mingw.zip
 
 # Install TianoCore Mingw CLANG 20.1.8
