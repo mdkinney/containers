@@ -30,19 +30,6 @@ RUN vs_buildtools.exe --quiet --wait --norestart --nocache \
   --add Microsoft.VisualStudio.Component.VC.Tools.ARM64
 RUN if exist vs_buildtools.exe del /q vs_buildtools.exe
 
-# Install chocolatey
-RUN curl -SL --output chocolatey_install.ps1 https://community.chocolatey.org/install.ps1
-RUN powershell -ExecutionPolicy Bypass -Command "& './chocolatey_install.ps1'"
-RUN del /q chocolatey_install.ps1
-ENV PATH="C:\ProgramData\chocolatey\bin;${PATH}"
-
-# Install CLANG/LLVM 20.1.8 from chocolatey
-ARG CLANG_VERSION=20.1.8
-RUN choco install -y llvm --version=%CLANG_VERSION%
-
-# Install curl
-RUN choco install -y curl
-
 # Install Python3
 RUN curl -SL --output python_install.exe %PYTHON_LINK%
 RUN python_install.exe /quiet InstallAllUsers=1 PrependPath=1 Include_test=0
@@ -66,6 +53,19 @@ RUN npm install -g markdownlint-cli
 
 # Install CSpell
 RUN npm install -g cspell
+
+# Install chocolatey
+RUN curl -SL --output chocolatey_install.ps1 https://community.chocolatey.org/install.ps1
+RUN powershell -ExecutionPolicy Bypass -Command "& './chocolatey_install.ps1'"
+RUN del /q chocolatey_install.ps1
+ENV PATH="C:\ProgramData\chocolatey\bin;${PATH}"
+
+# Install CLANG/LLVM 20.1.8 from chocolatey
+ARG CLANG_VERSION=20.1.8
+RUN choco install -y llvm --version=%CLANG_VERSION%
+
+# Install curl
+RUN choco install -y curl
 
 # Install TianoCore Mingw CLANG 20.1.8
 RUN curl -L -o EdkClangSetup-20.1.8.0.exe https://github.com/tianocore/edk2-edkrepo/releases/download/edkclang-v20.1.8/EdkClangSetup-20.1.8.0.exe
