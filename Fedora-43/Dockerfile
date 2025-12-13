@@ -67,8 +67,7 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
         libX11-devel.i686 \
         libXext.i686 \
         libXext-devel.i686 \
-        libasan.i686 \
-        libasan-devel.i686
+        libasan.i686
 
 # Install clang/llvm 20.1.8 and clang compiler-rt
 #RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
