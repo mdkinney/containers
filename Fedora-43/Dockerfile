@@ -55,26 +55,10 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
         nodejs \
         npm \
         tar \
-        sudo
-
-# Install clang/llvm 20.1.8 and clang compiler-rt
-RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
-    dnf \
-      --assumeyes \
-      --nodocs \
-      --setopt=install_weak_deps=0 \
-      install \
+        sudo \
         clang20-20.1.8-2.fc43 \
         llvm20-20.1.8-2.fc43 \
         compiler-rt20
-
-# Install 32-bit x86 libraries
-RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
-    dnf \
-      --assumeyes \
-      --nodocs \
-      --setopt=install_weak_deps=0 \
-      install \
         glibc.i686 \
         glibc-devel.i686 \
         libstdc++.i686 \
@@ -83,26 +67,52 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
         libXext.i686 \
         libXext-devel.i686
 
-RUN alternatives --install /usr/bin/python python /usr/bin/python3 1
+# Install clang/llvm 20.1.8 and clang compiler-rt
+#RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
+#    dnf \
+#      --assumeyes \
+#      --nodocs \
+#      --setopt=install_weak_deps=0 \
+#      install \
+#        clang20-20.1.8-2.fc43 \
+#        llvm20-20.1.8-2.fc43 \
+#        compiler-rt20
+
+# Install 32-bit x86 libraries
+#RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
+#    dnf \
+#      --assumeyes \
+#      --nodocs \
+#      --setopt=install_weak_deps=0 \
+#      install \
+#        glibc.i686 \
+#        glibc-devel.i686 \
+#        libstdc++.i686 \
+#        libX11.i686 \
+#        libX11-devel.i686 \
+#        libXext.i686 \
+#        libXext-devel.i686
+
+#RUN alternatives --install /usr/bin/python python /usr/bin/python3 1
 
 # Preinstall python + dependencies as virtual environment
-RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
-    dnf \
-      --assumeyes \
-      --nodocs \
-      --setopt=install_weak_deps=0 \
-      install \
-      python3 \
-      python3-virtualenv
-RUN virtualenv=/opt/venv
-ENV VIRTUAL_ENV=/opt/venv
-ENV PATH=/opt/venv/bin:$PATH
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --upgrade pip \
-        -r "https://raw.githubusercontent.com/tianocore/edk2/master/pip-requirements.txt"
+#RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
+#    dnf \
+#      --assumeyes \
+#      --nodocs \
+#      --setopt=install_weak_deps=0 \
+#      install \
+#      python3 \
+#      python3-virtualenv
+#RUN virtualenv=/opt/venv
+#ENV VIRTUAL_ENV=/opt/venv
+#ENV PATH=/opt/venv/bin:$PATH
+#RUN --mount=type=cache,target=/root/.cache/pip \
+#    pip install --upgrade pip \
+#        -r "https://raw.githubusercontent.com/tianocore/edk2/master/pip-requirements.txt"
 
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --upgrade pip lcov_cobertura setuptools
+#RUN --mount=type=cache,target=/root/.cache/pip \
+#    pip install --upgrade pip lcov_cobertura setuptools
 
 # Set toolchains prefix
 ENV GCC_AARCH64_PREFIX=/usr/bin/aarch64-linux-gnu-
