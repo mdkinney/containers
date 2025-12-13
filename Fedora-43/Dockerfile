@@ -58,7 +58,7 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
         sudo \
         clang20-20.1.8-2.fc43 \
         llvm20-20.1.8-2.fc43 \
-        compiler-rt20
+        compiler-rt20 \
         glibc.i686 \
         glibc-devel.i686 \
         libstdc++.i686 \
