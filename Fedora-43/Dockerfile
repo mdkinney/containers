@@ -49,6 +49,7 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
         nasm \
         https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELL_VERSION}/powershell-${POWERSHELL_VERSION}-1.rh.x86_64.rpm \
         python3 \
+        python3-virtualenv \
         python3-distutils-extra \
         python3-pip \
         python3-devel \
@@ -93,7 +94,7 @@ RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
 #        libXext.i686 \
 #        libXext-devel.i686
 
-#RUN alternatives --install /usr/bin/python python /usr/bin/python3 1
+RUN alternatives --install /usr/bin/python python /usr/bin/python3 1
 
 # Preinstall python + dependencies as virtual environment
 #RUN --mount=type=cache,target=/var/cache/libdnf5,sharing=locked \
