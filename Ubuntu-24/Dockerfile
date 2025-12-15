@@ -50,7 +50,7 @@ RUN \
         llvm-20 clang-20 lld-20 libclang-rt-20-dev && \
     apt-get install --yes --no-install-recommends \
         gcc-multilib g++-multilib libx11-dev libx11-6 libxext6 libxext-dev \
-        libc6-i386 libc6-dev-i386 libxext6:i386 libxext-dev:i386 && \
+        libc6-i386 libc6-dev-i386 libxext6:i386 libxext-dev:i386 linux-libc-dev:i386 && \
     apt-get install --yes --no-install-recommends \
         g++-${GCC_MAJOR_VERSION}-aarch64-linux-gnu gcc-${GCC_MAJOR_VERSION}-aarch64-linux-gnu \
         g++-${GCC_MAJOR_VERSION}-riscv64-linux-gnu gcc-${GCC_MAJOR_VERSION}-riscv64-linux-gnu && \
