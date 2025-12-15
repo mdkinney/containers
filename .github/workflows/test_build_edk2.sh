@@ -26,7 +26,7 @@ fi
 rm -f BaseTools/Bin/gcc_aarch64_linux_ext_dep.yaml
 
 python -m venv .venv
-source .venv/bin/activate
+. .venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install --upgrade -r pip-requirements.txt
 
