@@ -63,8 +63,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         libc6-i386 libc6-dev-i386 libxext6:i386 libxext-dev:i386 && \
     apt-get install --yes --no-install-recommends \
         g++-${GCC_MAJOR_VERSION}-aarch64-linux-gnu gcc-${GCC_MAJOR_VERSION}-aarch64-linux-gnu \
-        g++-${GCC_MAJOR_VERSION}-riscv64-linux-gnu gcc-${GCC_MAJOR_VERSION}-riscv64-linux-gnu && \
-    apt-get upgrade -y
+        g++-${GCC_MAJOR_VERSION}-riscv64-linux-gnu gcc-${GCC_MAJOR_VERSION}-riscv64-linux-gnu
 
 RUN \
     update-alternatives \
@@ -103,14 +102,6 @@ RUN \
 # Add clang/llvm to PATH
 ENV PATH=/usr/lib/llvm-20/bin:$PATH
 
-# Preinstall python + dependencies as virtual environment
-RUN virtualenv /opt/venv
-ENV VIRTUAL_ENV=/opt/venv
-ENV PATH=/opt/venv/bin:$PATH
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --upgrade pip \
-        -r "https://raw.githubusercontent.com/tianocore/edk2/master/pip-requirements.txt"
-
 # Set toolchains prefix
 ENV GCC_AARCH64_PREFIX=/usr/bin/aarch64-linux-gnu-
 ENV GCC_RISCV64_PREFIX=/usr/bin/riscv64-linux-gnu-
@@ -124,17 +115,6 @@ RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
-
-# Install edkrepo
-RUN mkdir /edkrepo_install && \
-    cd /edkrepo_install && \
-    wget -O- ${EDKREPO_URL} | tar zxvf - && \
-    ./install.py --no-prompt --user $(id -nu) && \
-    mkdir -p /etc/edkrepo_skel && \
-    cp -R /root/.edkrepo /etc/edkrepo_skel && \
-    rm -rf /edkrepo_install
-
-COPY init_edkrepo_conf.sh /usr/bin/init_edkrepo_conf
 
 # Test Image
 # This image is intended for jobs that run tests (and possibly also build)
