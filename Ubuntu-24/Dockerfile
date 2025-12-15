@@ -60,7 +60,7 @@ RUN \
     update-alternatives \
       --install /usr/bin/python python /usr/bin/python3.12 1 && \
     update-alternatives \
-      --install /usr/bin/python3 python3 /usr/bin/python3.12 1
+      --install /usr/bin/python3 python3 /usr/bin/python3.12 1 && \
     rm -rvf /etc/alternatives/cpp && \
     update-alternatives \
       --install /usr/bin/gcc gcc /usr/bin/gcc-${GCC_MAJOR_VERSION} 100 \
