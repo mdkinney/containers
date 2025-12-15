@@ -57,12 +57,13 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         python3.12 python3-venv python3-dev virtualenv \
         g++-${GCC_MAJOR_VERSION} gcc-${GCC_MAJOR_VERSION} \
         g++-${GCC_MAJOR_VERSION}-x86-64-linux-gnux32 gcc-${GCC_MAJOR_VERSION}-x86-64-linux-gnux32 \
-        g++-${GCC_MAJOR_VERSION}-aarch64-linux-gnu gcc-${GCC_MAJOR_VERSION}-aarch64-linux-gnu \
-        g++-${GCC_MAJOR_VERSION}-riscv64-linux-gnu gcc-${GCC_MAJOR_VERSION}-riscv64-linux-gnu \
         llvm-20 clang-20 lld-20 && \
     apt-get install --yes --no-install-recommends \
         gcc-multilib g++-multilib libx11-dev libx11-6 libxext6 libxext-dev \
         libc6-i386 libc6-dev-i386 libxext6:i386 libxext-dev:i386 && \
+    apt-get install --yes --no-install-recommends \
+        g++-${GCC_MAJOR_VERSION}-aarch64-linux-gnu gcc-${GCC_MAJOR_VERSION}-aarch64-linux-gnu \
+        g++-${GCC_MAJOR_VERSION}-riscv64-linux-gnu gcc-${GCC_MAJOR_VERSION}-riscv64-linux-gnu && \
     apt-get upgrade -y
 
 RUN \
