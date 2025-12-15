@@ -55,7 +55,12 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         gnupg \
         ca-certificates \
         python3.12 python3-venv python3-dev virtualenv \
-        gcc-13 g++-13 gcc-13-aarch64-linux-gnu gcc-13-arm-linux-gnueabi gcc-13-riscv64-linux-gnu \
+        g++-${GCC_MAJOR_VERSION} gcc-${GCC_MAJOR_VERSION} \
+        g++-${GCC_MAJOR_VERSION}-x86-64-linux-gnux32 gcc-${GCC_MAJOR_VERSION}-x86-64-linux-gnux32 \
+        g++-${GCC_MAJOR_VERSION}-aarch64-linux-gnu gcc-${GCC_MAJOR_VERSION}-aarch64-linux-gnu \
+        g++-${GCC_MAJOR_VERSION}-riscv64-linux-gnu gcc-${GCC_MAJOR_VERSION}-riscv64-linux-gnu \
+        g++-${GCC_MAJOR_VERSION}-arm-linux-gnueabi gcc-${GCC_MAJOR_VERSION}-arm-linux-gnueabi \
+        g++-${GCC_MAJOR_VERSION}-arm-linux-gnueabihf gcc-${GCC_MAJOR_VERSION}-arm-linux-gnueabihf \
         llvm-20 clang-20 lld-20 && \
     apt-get install --yes --no-install-recommends \
         gcc-multilib g++-multilib libx11-dev libx11-6 libxext6 libxext-dev \
