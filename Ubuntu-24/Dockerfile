@@ -59,13 +59,45 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         g++-${GCC_MAJOR_VERSION}-x86-64-linux-gnux32 gcc-${GCC_MAJOR_VERSION}-x86-64-linux-gnux32 \
         g++-${GCC_MAJOR_VERSION}-aarch64-linux-gnu gcc-${GCC_MAJOR_VERSION}-aarch64-linux-gnu \
         g++-${GCC_MAJOR_VERSION}-riscv64-linux-gnu gcc-${GCC_MAJOR_VERSION}-riscv64-linux-gnu \
-        g++-${GCC_MAJOR_VERSION}-arm-linux-gnueabi gcc-${GCC_MAJOR_VERSION}-arm-linux-gnueabi \
-        g++-${GCC_MAJOR_VERSION}-arm-linux-gnueabihf gcc-${GCC_MAJOR_VERSION}-arm-linux-gnueabihf \
         llvm-20 clang-20 lld-20 && \
     apt-get install --yes --no-install-recommends \
         gcc-multilib g++-multilib libx11-dev libx11-6 libxext6 libxext-dev \
         libc6-i386 libc6-dev-i386 libxext6:i386 libxext-dev:i386 && \
     apt-get upgrade -y
+
+RUN \
+    update-alternatives \
+      --install /usr/bin/python python /usr/bin/python3.12 1 &&\
+    update-alternatives \
+      --install /usr/bin/python3 python3 /usr/bin/python3.12 1 &&\
+    rm -rvf /etc/alternatives/cpp && \
+    update-alternatives \
+      --install /usr/bin/gcc gcc /usr/bin/gcc-${GCC_MAJOR_VERSION} 100 \
+      --slave /usr/bin/g++ g++ /usr/bin/g++-${GCC_MAJOR_VERSION} \
+      --slave /usr/bin/gcc-ar gcc-ar /usr/bin/gcc-ar-${GCC_MAJOR_VERSION} \
+      --slave /usr/bin/gcc-nm gcc-nm /usr/bin/gcc-nm-${GCC_MAJOR_VERSION} \
+      --slave /usr/bin/gcc-ranlib gcc-ranlib /usr/bin/gcc-ranlib-${GCC_MAJOR_VERSION} \
+      --slave /usr/bin/gcov gcov /usr/bin/gcov-${GCC_MAJOR_VERSION} && \
+    update-alternatives \
+      --install /usr/bin/cpp cpp /usr/bin/cpp-${GCC_MAJOR_VERSION} 100 && \
+    update-alternatives \
+      --install /usr/bin/aarch64-linux-gnu-gcc aarch64-linux-gnu-gcc /usr/bin/aarch64-linux-gnu-gcc-${GCC_MAJOR_VERSION} 100 \
+      --slave /usr/bin/aarch64-linux-gnu-g++ aarch64-linux-gnu-g++ /usr/bin/aarch64-linux-gnu-g++-${GCC_MAJOR_VERSION} \
+      --slave /usr/bin/aarch64-linux-gnu-gcc-ar aarch64-linux-gnu-gcc-ar /usr/bin/aarch64-linux-gnu-gcc-ar-${GCC_MAJOR_VERSION} \
+      --slave /usr/bin/aarch64-linux-gnu-gcc-nm aarch64-linux-gnu-gcc-nm /usr/bin/aarch64-linux-gnu-gcc-nm-${GCC_MAJOR_VERSION} \
+      --slave /usr/bin/aarch64-linux-gnu-gcc-ranlib aarch64-linux-gnu-gcc-ranlib /usr/bin/aarch64-linux-gnu-gcc-ranlib-${GCC_MAJOR_VERSION} \
+      --slave /usr/bin/aarch64-linux-gnu-gcov aarch64-linux-gnu-gcov /usr/bin/aarch64-linux-gnu-gcov-${GCC_MAJOR_VERSION} && \
+    update-alternatives \
+      --install /usr/bin/aarch64-linux-gnu-cpp aarch64-linux-gnu-cpp /usr/bin/aarch64-linux-gnu-cpp-${GCC_MAJOR_VERSION} 100 && \
+    update-alternatives \
+      --install /usr/bin/riscv64-linux-gnu-gcc riscv64-linux-gnu-gcc /usr/bin/riscv64-linux-gnu-gcc-${GCC_MAJOR_VERSION} 100 \
+      --slave /usr/bin/riscv64-linux-gnu-g++ riscv64-linux-gnu-g++ /usr/bin/riscv64-linux-gnu-g++-${GCC_MAJOR_VERSION} \
+      --slave /usr/bin/riscv64-linux-gnu-gcc-ar riscv64-linux-gnu-gcc-ar /usr/bin/riscv64-linux-gnu-gcc-ar-${GCC_MAJOR_VERSION} \
+      --slave /usr/bin/riscv64-linux-gnu-gcc-nm riscv64-linux-gnu-gcc-nm /usr/bin/riscv64-linux-gnu-gcc-nm-${GCC_MAJOR_VERSION} \
+      --slave /usr/bin/riscv64-linux-gnu-gcc-ranlib riscv64-linux-gnu-gcc-ranlib /usr/bin/riscv64-linux-gnu-gcc-ranlib-${GCC_MAJOR_VERSION} \
+      --slave /usr/bin/riscv64-linux-gnu-gcov riscv64-linux-gnu-gcov /usr/bin/riscv64-linux-gnu-gcov-${GCC_MAJOR_VERSION} && \
+    update-alternatives \
+      --install /usr/bin/riscv64-linux-gnu-cpp riscv64-linux-gnu-cpp /usr/bin/riscv64-linux-gnu-cpp-${GCC_MAJOR_VERSION} 100
 
 # Add clang/llvm to PATH
 ENV PATH=/usr/lib/llvm-20/bin:$PATH
@@ -80,11 +112,9 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 # Set toolchains prefix
 ENV GCC_AARCH64_PREFIX=/usr/bin/aarch64-linux-gnu-
-ENV GCC_ARM_PREFIX=/usr/bin/arm-linux-gnueabi-
 ENV GCC_RISCV64_PREFIX=/usr/bin/riscv64-linux-gnu-
 # - Also set GCC5, which is deprecated, but still in use.
 ENV GCC5_AARCH64_PREFIX=/usr/bin/aarch64-linux-gnu-
-ENV GCC5_ARM_PREFIX=/usr/bin/arm-linux-gnueabi-
 ENV GCC5_RISCV64_PREFIX=/usr/bin/riscv64-linux-gnu-
 
 # Set the locale
@@ -130,7 +160,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     mkdir -p qemu-build && cd qemu-build && \
     wget  "${QEMU_URL}" && \
     tar -xf qemu-9.1.1.tar.xz --strip-components=1 && \
-    ./configure --target-list=x86_64-softmmu,arm-softmmu,aarch64-softmmu,riscv32-softmmu,riscv32-linux-user,riscv64-linux-user,riscv64-softmmu && \
+    ./configure --target-list=x86_64-softmmu,aarch64-softmmu,riscv64-linux-user,riscv64-softmmu && \
     make install -j $(nproc) && \
     cd .. && \
     rm -rf qemu-build && \
