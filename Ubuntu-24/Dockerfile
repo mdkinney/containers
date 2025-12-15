@@ -16,24 +16,14 @@
 # all build dependencies.
 FROM ubuntu:24.04 AS build
 
-RUN userdel -r ubuntu
-
-# Set the EDKREPO URL (and version)
-ENV EDKREPO_URL=https://github.com/tianocore/edk2-edkrepo/releases/download/edkrepo-v2.1.2/edkrepo-2.1.2.tar.gz
-
-# Suppresses a debconf error during apt-get install.
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Set timezone.
-ENV TZ=UTC
-
 ENV GCC_MAJOR_VERSION=13
 
-RUN dpkg --add-architecture i386
-
 # Install and update the package list
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+RUN \
+    userdel -r ubuntu \
+    --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    dpkg --add-architecture i386 && \
     apt-get update && \
     apt-get install --yes --no-install-recommends \
         software-properties-common \
@@ -54,7 +44,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         locales \
         gnupg \
         ca-certificates \
-        python3.12 python3-venv python3-dev virtualenv \
+        python3.12 python3-pip python3-venv python3-dev virtualenv \
         g++-${GCC_MAJOR_VERSION} gcc-${GCC_MAJOR_VERSION} \
         g++-${GCC_MAJOR_VERSION}-x86-64-linux-gnux32 gcc-${GCC_MAJOR_VERSION}-x86-64-linux-gnux32 \
         llvm-20 clang-20 lld-20 libclang-rt-20-dev && \
@@ -63,35 +53,30 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         libc6-i386 libc6-dev-i386 libxext6:i386 libxext-dev:i386 && \
     apt-get install --yes --no-install-recommends \
         g++-${GCC_MAJOR_VERSION}-aarch64-linux-gnu gcc-${GCC_MAJOR_VERSION}-aarch64-linux-gnu \
-        g++-${GCC_MAJOR_VERSION}-riscv64-linux-gnu gcc-${GCC_MAJOR_VERSION}-riscv64-linux-gnu
+        g++-${GCC_MAJOR_VERSION}-riscv64-linux-gnu gcc-${GCC_MAJOR_VERSION}-riscv64-linux-gnu && \
+    rm -rf /var/lib/apt/lists/*
 
 RUN \
     update-alternatives \
-      --install /usr/bin/python python /usr/bin/python3.12 1
-RUN \
+      --install /usr/bin/python python /usr/bin/python3.12 1 && \
     update-alternatives \
       --install /usr/bin/python3 python3 /usr/bin/python3.12 1
-RUN \
-    rm -rvf /etc/alternatives/cpp
-RUN \
+    rm -rvf /etc/alternatives/cpp && \
     update-alternatives \
       --install /usr/bin/gcc gcc /usr/bin/gcc-${GCC_MAJOR_VERSION} 100 \
       --slave /usr/bin/g++ g++ /usr/bin/g++-${GCC_MAJOR_VERSION} \
       --slave /usr/bin/gcc-ar gcc-ar /usr/bin/gcc-ar-${GCC_MAJOR_VERSION} \
       --slave /usr/bin/gcc-nm gcc-nm /usr/bin/gcc-nm-${GCC_MAJOR_VERSION} \
       --slave /usr/bin/gcc-ranlib gcc-ranlib /usr/bin/gcc-ranlib-${GCC_MAJOR_VERSION} \
-      --slave /usr/bin/gcov gcov /usr/bin/gcov-${GCC_MAJOR_VERSION}
-RUN \
+      --slave /usr/bin/gcov gcov /usr/bin/gcov-${GCC_MAJOR_VERSION} && \
     update-alternatives \
-      --install /usr/bin/cpp cpp /usr/bin/cpp-${GCC_MAJOR_VERSION} 100
-RUN \
+      --install /usr/bin/cpp cpp /usr/bin/cpp-${GCC_MAJOR_VERSION} 100 && \
     update-alternatives \
       --install /usr/bin/aarch64-linux-gnu-gcc aarch64-linux-gnu-gcc /usr/bin/aarch64-linux-gnu-gcc-${GCC_MAJOR_VERSION} 100 \
       --slave /usr/bin/aarch64-linux-gnu-g++ aarch64-linux-gnu-g++ /usr/bin/aarch64-linux-gnu-g++-${GCC_MAJOR_VERSION} \
       --slave /usr/bin/aarch64-linux-gnu-gcc-ar aarch64-linux-gnu-gcc-ar /usr/bin/aarch64-linux-gnu-gcc-ar-${GCC_MAJOR_VERSION} \
       --slave /usr/bin/aarch64-linux-gnu-gcc-nm aarch64-linux-gnu-gcc-nm /usr/bin/aarch64-linux-gnu-gcc-nm-${GCC_MAJOR_VERSION} \
-      --slave /usr/bin/aarch64-linux-gnu-gcc-ranlib aarch64-linux-gnu-gcc-ranlib /usr/bin/aarch64-linux-gnu-gcc-ranlib-${GCC_MAJOR_VERSION}
-RUN \
+      --slave /usr/bin/aarch64-linux-gnu-gcc-ranlib aarch64-linux-gnu-gcc-ranlib /usr/bin/aarch64-linux-gnu-gcc-ranlib-${GCC_MAJOR_VERSION} && \
     update-alternatives \
       --install /usr/bin/riscv64-linux-gnu-gcc riscv64-linux-gnu-gcc /usr/bin/riscv64-linux-gnu-gcc-${GCC_MAJOR_VERSION} 100 \
       --slave /usr/bin/riscv64-linux-gnu-g++ riscv64-linux-gnu-g++ /usr/bin/riscv64-linux-gnu-g++-${GCC_MAJOR_VERSION} \
