@@ -20,9 +20,9 @@ ENV GCC_MAJOR_VERSION=13
 
 # Install and update the package list
 RUN \
-    userdel -r ubuntu \
     --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    userdel -r ubuntu && \
     dpkg --add-architecture i386 && \
     apt-get update && \
     apt-get install --yes --no-install-recommends \
