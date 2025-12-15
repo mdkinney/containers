@@ -56,9 +56,9 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         ca-certificates \
         python3.12 python3-venv python3-dev virtualenv \
         gcc-13 g++-13 gcc-13-aarch64-linux-gnu gcc-13-arm-linux-gnueabi gcc-13-riscv64-linux-gnu \
-        llvm-20 clang-20 lld-20 \
-        gcc-multilib g++-multilib libx11-dev libx11-6 libxext6 libxext-dev && \
+        llvm-20 clang-20 lld-20 && \
     apt-get install --yes --no-install-recommends \
+        gcc-multilib g++-multilib libx11-dev libx11-6 libxext6 libxext-dev \
         libc6-i386 libc6-dev-i386 libxext6:i386 libxext-dev:i386 && \
     apt-get upgrade -y
 
@@ -106,7 +106,7 @@ RUN \
       --install /usr/bin/riscv64-linux-gnu-cpp riscv64-linux-gnu-cpp /usr/bin/riscv64-linux-gnu-cpp-${GCC_MAJOR_VERSION} 100
 
 # Add clang/llvm to PATH
-ENV PATH /usr/lib/llvm-20/bin:$PATH
+ENV PATH=/usr/lib/llvm-20/bin:$PATH
 
 # Preinstall python + dependencies as virtual environment
 RUN virtualenv /opt/venv
