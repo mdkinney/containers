@@ -54,9 +54,11 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         locales \
         gnupg \
         ca-certificates \
-        llvm-20 clang-20 lld-20 \
         python3.12 python3-venv python3-dev virtualenv \
-        gcc-multilib g++-multilib libx11-dev libx11-6 libxext6 libxext-dev \
+        gcc-13 g++-13 gcc-13-aarch64-linux-gnu gcc-13-arm-linux-gnueabi gcc-13-riscv64-linux-gnu \
+        llvm-20 clang-20 lld-20 \
+        gcc-multilib g++-multilib libx11-dev libx11-6 libxext6 libxext-dev && \
+    apt-get install --yes --no-install-recommends \
         libc6-i386 libc6-dev-i386 libxext6:i386 libxext-dev:i386 && \
     apt-get upgrade -y
 
@@ -108,27 +110,27 @@ ENV PATH /usr/lib/llvm-20/bin:$PATH
 
 # Preinstall python + dependencies as virtual environment
 RUN virtualenv /opt/venv
-ENV VIRTUAL_ENV /opt/venv
-ENV PATH /opt/venv/bin:$PATH
+ENV VIRTUAL_ENV=/opt/venv
+ENV PATH=/opt/venv/bin:$PATH
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --upgrade pip \
         -r "https://raw.githubusercontent.com/tianocore/edk2/master/pip-requirements.txt"
 
 # Set toolchains prefix
-ENV GCC_AARCH64_PREFIX  /usr/bin/aarch64-linux-gnu-
-ENV GCC_ARM_PREFIX      /usr/bin/arm-linux-gnueabi-
-ENV GCC_RISCV64_PREFIX  /usr/bin/riscv64-linux-gnu-
+ENV GCC_AARCH64_PREFIX=/usr/bin/aarch64-linux-gnu-
+ENV GCC_ARM_PREFIX=/usr/bin/arm-linux-gnueabi-
+ENV GCC_RISCV64_PREFIX=/usr/bin/riscv64-linux-gnu-
 # - Also set GCC5, which is deprecated, but still in use.
-ENV GCC5_AARCH64_PREFIX /usr/bin/aarch64-linux-gnu-
-ENV GCC5_ARM_PREFIX     /usr/bin/arm-linux-gnueabi-
-ENV GCC5_RISCV64_PREFIX /usr/bin/riscv64-linux-gnu-
+ENV GCC5_AARCH64_PREFIX=/usr/bin/aarch64-linux-gnu-
+ENV GCC5_ARM_PREFIX=/usr/bin/arm-linux-gnueabi-
+ENV GCC5_RISCV64_PREFIX=/usr/bin/riscv64-linux-gnu-
 
 # Set the locale
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
     locale-gen
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
 
 # Install edkrepo
 RUN mkdir /edkrepo_install && \
