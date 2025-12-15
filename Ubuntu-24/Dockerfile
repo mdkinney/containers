@@ -29,6 +29,8 @@ ENV TZ=UTC
 
 ENV GCC_MAJOR_VERSION=13
 
+RUN dpkg --add-architecture i386
+
 # Install and update the package list
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
@@ -51,14 +53,17 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         mono-devel \
         locales \
         gnupg \
-        ca-certificates && \
-    apt-get install --yes --no-install-recommends \
+        ca-certificates \
         g++-${GCC_MAJOR_VERSION} gcc-${GCC_MAJOR_VERSION} \
         g++-${GCC_MAJOR_VERSION}-x86-64-linux-gnux32 gcc-${GCC_MAJOR_VERSION}-x86-64-linux-gnux32 \
         g++-${GCC_MAJOR_VERSION}-aarch64-linux-gnu gcc-${GCC_MAJOR_VERSION}-aarch64-linux-gnu \
         g++-${GCC_MAJOR_VERSION}-riscv64-linux-gnu gcc-${GCC_MAJOR_VERSION}-riscv64-linux-gnu \
         g++-${GCC_MAJOR_VERSION}-arm-linux-gnueabi gcc-${GCC_MAJOR_VERSION}-arm-linux-gnueabi \
-        g++-${GCC_MAJOR_VERSION}-arm-linux-gnueabihf gcc-${GCC_MAJOR_VERSION}-arm-linux-gnueabihf && \
+        g++-${GCC_MAJOR_VERSION}-arm-linux-gnueabihf gcc-${GCC_MAJOR_VERSION}-arm-linux-gnueabihf \
+        llvm-20 clang-20 lld-20 \
+        python3.12 python3-venv python3-dev virtualenv \
+        gcc-multilib g++-multilib libx11-dev libx11-6 libxext6 libxext-dev \
+        libc6-i386 libc6-dev-i386 libxext6:i386 libxext-dev:i386 && \
     apt-get upgrade -y
 
 RUN \
@@ -104,15 +109,10 @@ RUN \
     update-alternatives \
       --install /usr/bin/riscv64-linux-gnu-cpp riscv64-linux-gnu-cpp /usr/bin/riscv64-linux-gnu-cpp-${GCC_MAJOR_VERSION} 100
 
+# Add clang/llvm to PATH
+ENV PATH /usr/lib/llvm-20/bin:$PATH
+
 # Preinstall python + dependencies as virtual environment
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    apt-get update && \
-    apt-get install --yes --no-install-recommends \
-      python3 \
-      python3-venv \
-      python3-dev\
-      virtualenv
 RUN virtualenv /opt/venv
 ENV VIRTUAL_ENV /opt/venv
 ENV PATH /opt/venv/bin:$PATH
