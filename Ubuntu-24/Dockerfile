@@ -90,9 +90,8 @@ ENV PATH=/usr/lib/llvm-20/bin:$PATH
 # Set toolchains prefix
 ENV GCC_AARCH64_PREFIX=/usr/bin/aarch64-linux-gnu-
 ENV GCC_RISCV64_PREFIX=/usr/bin/riscv64-linux-gnu-
-# - Also set GCC5, which is deprecated, but still in use.
-ENV GCC5_AARCH64_PREFIX=/usr/bin/aarch64-linux-gnu-
-ENV GCC5_RISCV64_PREFIX=/usr/bin/riscv64-linux-gnu-
+ENV GCCNOLTO_AARCH64_PREFIX=/usr/bin/aarch64-linux-gnu-
+ENV GCCNOLTO_RISCV64_PREFIX=/usr/bin/riscv64-linux-gnu-
 
 # Set the locale
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
